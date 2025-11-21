@@ -1,5 +1,7 @@
+import Shop from "./components/Shop/Shop";
+
 function App() {
-  return <div>123</div>
+  return <Shop name='магазинчик' address='ну там на углу который' />
 }
 
 export default App;
