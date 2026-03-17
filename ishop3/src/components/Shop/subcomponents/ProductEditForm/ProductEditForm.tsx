@@ -44,7 +44,12 @@ export default function ProductEditForm({
         }
       ]}
       onDirty={onDirty}
-      onSubmit={formValues => onSubmit({ ...formValues } as unknown as Omit<Product, 'id'>)}
+      onSubmit={formValues => onSubmit({
+        name: formValues.name,
+        price: +formValues.price,
+        url: formValues.url,
+        quantity: +formValues.quantity,
+      })}
       onCancel={onCancel}
     />
   </>
