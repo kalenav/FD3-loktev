@@ -58,6 +58,7 @@ export default function ProductList({
       </table>
       <button
         className="new-product-button"
+        disabled={buttonsDisabled}
         onClick={() => { setSelected(null); onCreate(); }}
       >New product</button>
     </>
