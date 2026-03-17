@@ -52,43 +52,16 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
         forcedSelectedProductId={(formActive && formDirty) ? selectedProduct?.id : undefined}
       />
       {formActive && (
-        <React.Fragment key={selectedProduct?.id ?? 0}>
-          <h2>Edit product</h2>
-          <Form
-            fields={[
-              {
-                name: 'name',
-                label: 'Name',
-                defaultValue: selectedProduct?.name || '',
-                validators: [NonEmptyStringValidator]
-              },
-              {
-                name: 'price',
-                label: 'Price',
-                defaultValue: `${selectedProduct?.price || ''}`,
-                validators: [NonEmptyStringValidator, NumberStringValidator]
-              },
-              {
-                name: 'url',
-                label: 'URL',
-                defaultValue: selectedProduct?.url || '',
-                validators: [NonEmptyStringValidator]
-              },
-              {
-                name: 'quantity',
-                label: 'Quantity',
-                defaultValue: `${selectedProduct?.quantity || ''}`,
-                validators: [NonEmptyStringValidator, NumberStringValidator]
-              }
-            ]}
+        // не уверен, что это юзкейс key. руководствовался тем, что если выбрать другой продукт, пока открыта форма,
+        // то formActive не поменяется, весь этот кусок не перерисуется, и форма останется старой. поэтому заставляю его
+        // по-любому перерисовываться, если выбран другой продукт
+        <ProductEditForm
+          key={selectedProduct?.id ?? 0}
+          product={selectedProduct || undefined}
             onDirty={() => setFormDirty(true)}
-            onSubmit={formValues => concludeProductEdit({
-              id: selectedProduct!.id,
-              ...formValues
-            } as ProductType)}
+          onSubmit={formValues => concludeProductEdit(formValues as ProductType, selectedProduct?.id)}
             onCancel={() => { setFormActive(false); setFormDirty(false); }}
           />
-        </React.Fragment>
       )}
       {!!selectedProduct && !formActive && (
         <Card name={selectedProduct.name} price={selectedProduct.price} />
