@@ -1,4 +1,3 @@
-import './App.scss';
 import Shop from './components/Shop/Shop';
 import products from './data/products.json';
 
