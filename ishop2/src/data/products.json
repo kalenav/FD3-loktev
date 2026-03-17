@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "iPhone 12",
+    "price": 799,
+    "url": "https://example.com/iphone12.jpg",
+    "quantity": 10
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S21",
+    "price": 699,
+    "url": "https://example.com/galaxy-s21.jpg",
+    "quantity": 15
+  },
+  {
+    "id": 3,
+    "name": "Google Pixel 5",
+    "price": 599,
+    "url": "https://example.com/pixel5.jpg",
+    "quantity": 20
+  },
+  {
+    "id": 4,
+    "name": "OnePlus 9",
+    "price": 729,
+    "url": "https://example.com/oneplus9.jpg",
+    "quantity": 12
+  },
+  {
+    "id": 5,
+    "name": "Sony Xperia 1 II",
+    "price": 1199,
+    "url": "https://example.com/xperia1ii.jpg",
+    "quantity": 8
+  }
+]
