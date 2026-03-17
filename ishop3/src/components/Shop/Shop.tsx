@@ -1,10 +1,8 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Product as ProductType } from "../../model/product.interface";
 import Card from "../Card/Card";
-import Form from "../Form/Form";
-import { NonEmptyStringValidator } from "../Form/validators/empty-string.validator";
-import { NumberStringValidator } from "../Form/validators/number-string.validator";
 import './Shop.scss';
+import ProductEditForm from "./subcomponents/ProductEditForm/ProductEditForm";
 import ProductList from "./subcomponents/ProductList/ProductList";
 
 export default function Shop({ products }: { products: Array<ProductType> }) {
@@ -13,23 +11,38 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
   const [formActive, setFormActive] = useState(false);
   const [formDirty, setFormDirty] = useState(false);
 
-  const selectProduct = useCallback((product: ProductType) => {
+  const getProductById = useCallback((id: number) => {
+    return productList.find(p => p.id === id) || null;
+  }, [productList]);
+
+  const selectProduct = useCallback((id: number) => {
     if (formActive && formDirty) {
       return;
     }
-    setSelectedProduct(product);
+    setSelectedProduct(getProductById(id));
     setFormActive(false);
-  }, [formActive, formDirty]);
+  }, [formActive, formDirty, getProductById]);
 
-  const startProductEdit = useCallback((product: ProductType) => {
-    selectProduct(product);
+  const startProductEdit = useCallback((id?: number) => {
+    id && selectProduct(id);
     setFormActive(true);
     setFormDirty(false);
   }, [selectProduct]);
-  const concludeProductEdit = useCallback((editedProduct: ProductType) => {
+  const concludeProductEdit = useCallback((product: Omit<ProductType, 'id'>, id?: number) => {
     setFormActive(false);
-    console.log(editedProduct);
-  }, []);
+    const newProductList = productList.slice();
+    if (!id) {
+      const newProductId = Math.max(...newProductList.map(p => p.id)) + 1;
+      newProductList.push({ ...product, id: newProductId });
+      setProductList(newProductList);
+      selectProduct(newProductId);
+      return;
+    }
+    const productIndex = newProductList.findIndex(p => p.id === id);
+    newProductList[productIndex] = { ...product, id };
+    setProductList(newProductList);
+    selectProduct(id);
+  }, [productList]);
 
   const deleteProduct = useCallback((id: number) => {
     // eslint-disable-next-line no-restricted-globals
@@ -46,6 +59,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
       <ProductList
         products={productList}
         onSelect={selectProduct}
+        onNew={() => { setSelectedProduct(null); startProductEdit(); }}
         onEdit={startProductEdit}
         onDelete={deleteProduct}
         buttonsDisabled={formActive && formDirty}
@@ -58,12 +72,12 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
         <ProductEditForm
           key={selectedProduct?.id ?? 0}
           product={selectedProduct || undefined}
-            onDirty={() => setFormDirty(true)}
+          onDirty={() => setFormDirty(true)}
           onSubmit={formValues => concludeProductEdit(formValues as ProductType, selectedProduct?.id)}
-            onCancel={() => { setFormActive(false); setFormDirty(false); }}
-          />
+          onCancel={() => { setFormActive(false); setFormDirty(false); }}
+        />
       )}
-      {!!selectedProduct && !formActive && (
+      {selectedProduct && !formActive && (
         <Card name={selectedProduct.name} price={selectedProduct.price} />
       )}
     </div>

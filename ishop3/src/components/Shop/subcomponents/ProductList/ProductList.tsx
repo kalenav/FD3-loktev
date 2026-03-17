@@ -6,52 +6,60 @@ import './ProductList.scss';
 export default function ProductList({
   products,
   onSelect,
+  onNew,
   onEdit,
   onDelete,
   buttonsDisabled,
   forcedSelectedProductId,
 }: {
   products: Array<ProductType>,
-  onSelect: (product: ProductType) => void,
-  onEdit: (product: ProductType) => void,
+  onSelect: (id: number) => void,
+  onNew: () => void,
+  onEdit: (id: number) => void,
   onDelete: (id: number) => void,
   buttonsDisabled: boolean,
   forcedSelectedProductId?: number,
 }) {
-  const [selected, setSelected] = useState<ProductType | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
 
-  const selectProduct = useCallback((product: ProductType) => {
-    if (!!forcedSelectedProductId && forcedSelectedProductId !== product.id) {
+  const selectProduct = useCallback((id: number) => {
+    if (!!forcedSelectedProductId && forcedSelectedProductId !== id) {
       return;
     }
-    setSelected(product);
-    onSelect(product);
+    setSelected(id);
+    onSelect(id);
   }, [forcedSelectedProductId]);
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>URL</th>
-          <th>Quantity</th>
-          <th>Control</th>
-        </tr>
-      </thead>
-      <tbody>
-        {products.map((product, index) => (
-          <Product
-            key={product.id}
-            product={product}
-            selected={selected?.id === product.id}
-            buttonsDisabled={buttonsDisabled}
-            onSelect={() => selectProduct(product)}
-            onEdit={() => { setSelected(product); onEdit(product); }}
-            onDelete={() => onDelete(product.id)}
-          />
-        ))}
-      </tbody>
-    </table>
+    <>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>URL</th>
+            <th>Quantity</th>
+            <th>Control</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product, index) => (
+            <Product
+              key={product.id}
+              product={product}
+              selected={selected === product.id}
+              buttonsDisabled={buttonsDisabled}
+              onSelect={() => selectProduct(product.id)}
+              onEdit={() => { setSelected(product.id); onEdit(product.id); }}
+              onDelete={() => onDelete(product.id)}
+            />
+          ))}
+        </tbody>
+      </table>
+      <button
+        className="new-product-button"
+        onClick={() => { setSelected(null); onNew(); }}
+      >New product</button>
+    </>
   )
 }
