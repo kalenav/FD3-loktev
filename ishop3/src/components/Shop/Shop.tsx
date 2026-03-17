@@ -37,6 +37,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
     <div className="shop">
       <ProductList
         products={productList}
+        selectedProductId={selectedProductId}
         onSelect={id => {
           setSelectedProductId(id);
           setFormActive(false);
