@@ -1,0 +1,28 @@
+.filter {
+  display: grid;
+  grid-template-columns: 20px 1fr 50px;
+  grid-template-rows: 30px 100px;
+  gap: 10px;
+  grid-template-areas:
+    "checkbox freetext reset"
+    "words words words";
+  width: 300px;
+  
+  .checkbox {
+    grid-area: checkbox;
+  }
+
+  .freetext-input {
+    grid-area: freetext;
+  }
+
+  .reset-button {
+    grid-area: reset;
+  }
+
+  .words {
+    grid-area: words;
+    border: solid black 1px;
+    overflow: auto;
+  }
+}
