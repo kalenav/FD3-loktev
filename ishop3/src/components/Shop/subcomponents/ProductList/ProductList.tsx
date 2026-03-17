@@ -6,29 +6,29 @@ import './ProductList.scss';
 export default function ProductList({
   products,
   onSelect,
-  onNew,
+  onCreate,
   onEdit,
   onDelete,
   buttonsDisabled,
-  forcedSelectedProductId,
+  selectionChangeDisabled,
 }: {
   products: Array<ProductType>,
   onSelect: (id: number) => void,
-  onNew: () => void,
+  onCreate: () => void,
   onEdit: (id: number) => void,
   onDelete: (id: number) => void,
   buttonsDisabled: boolean,
-  forcedSelectedProductId?: number,
+  selectionChangeDisabled: boolean,
 }) {
   const [selected, setSelected] = useState<number | null>(null);
 
   const selectProduct = useCallback((id: number) => {
-    if (!!forcedSelectedProductId && forcedSelectedProductId !== id) {
+    if (selectionChangeDisabled) {
       return;
     }
     setSelected(id);
     onSelect(id);
-  }, [forcedSelectedProductId]);
+  }, [selectionChangeDisabled]);
 
   return (
     <>
@@ -58,7 +58,7 @@ export default function ProductList({
       </table>
       <button
         className="new-product-button"
-        onClick={() => { setSelected(null); onNew(); }}
+        onClick={() => { setSelected(null); onCreate(); }}
       >New product</button>
     </>
   )
