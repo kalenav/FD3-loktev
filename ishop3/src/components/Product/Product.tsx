@@ -4,12 +4,16 @@ import './Product.scss';
 export default function Product({
   product,
   selected,
+  buttonsDisabled,
   onSelect,
+  onEdit,
   onDelete,
 }: {
   product: ProductType,
   selected: boolean,
+  buttonsDisabled: boolean,
   onSelect: () => void,
+  onEdit: () => void,
   onDelete: () => void,
 }) {
   return (
@@ -21,7 +25,10 @@ export default function Product({
       <td>{product.price}</td>
       <td>{product.url}</td>
       <td>{product.quantity}</td>
-      <td><button onClick={e => { e.stopPropagation(); onDelete(); }}>Delete</button></td>
+      <td>
+        <button disabled={buttonsDisabled} onClick={e => { e.stopPropagation(); onEdit(); }}>Edit</button>
+        <button disabled={buttonsDisabled} onClick={e => { e.stopPropagation(); onDelete(); }}>Delete</button>
+      </td>
     </tr>
   );
 }
