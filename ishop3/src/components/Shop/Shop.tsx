@@ -17,7 +17,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
 
   const concludeProductEdit = useCallback((product: Omit<ProductType, 'id'>, id?: number) => {
     const productIndex = id ? productList.findIndex(p => p.id === id) : productList.length;
-    id ??= Math.max(...productList.map(p => p.id)) + 1;
+    id ??= Math.max(0, ...productList.map(p => p.id)) + 1;
     const newProductList = productList.slice();
     newProductList[productIndex] = { ...product, id };
     setProductList(newProductList);
