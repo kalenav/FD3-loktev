@@ -41,7 +41,7 @@ export default function ProductList({
           </tr>
         </thead>
         <tbody>
-          {products.map((product, index) => (
+          {products.map(product => (
             <Product
               key={product.id}
               product={product}
