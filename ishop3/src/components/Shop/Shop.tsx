@@ -9,6 +9,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
   const [productList, setProductList] = useState(products.slice());
   const [formActive, setFormActive] = useState(false);
   const [formDirty, setFormDirty] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const selectedProduct = useMemo(() => {
     return productList.find(p => p.id === selectedProductId) || null;
@@ -44,6 +45,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
           setSelectedProductId(null);
           setFormActive(true);
           setFormDirty(false);
+          setCreating(true);
         }}
         onEdit={id => {
           setSelectedProductId(id);
@@ -51,8 +53,8 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
           setFormDirty(false);
         }}
         onDelete={deleteProduct}
-        buttonsDisabled={formActive && formDirty}
-        selectionChangeDisabled={formActive && formDirty}
+        buttonsDisabled={creating || (formActive && formDirty)}
+        selectionChangeDisabled={creating || (formActive && formDirty)}
       />
       {formActive && (
         <ProductEditForm
@@ -60,10 +62,11 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
           product={selectedProduct || undefined}
           onDirty={() => setFormDirty(true)}
           onSubmit={formValues => {
-            concludeProductEdit(formValues as ProductType, selectedProduct?.id);
+            concludeProductEdit(formValues as Omit<ProductType, 'id'>, selectedProduct?.id);
             setFormActive(false);
+            setCreating(false);
           }}
-          onCancel={() => { setFormActive(false); setFormDirty(false); }}
+          onCancel={() => { setFormActive(false); setCreating(false); }}
         />
       )}
       {selectedProduct && !formActive && (
