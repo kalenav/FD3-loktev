@@ -23,11 +23,16 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
     setFormActive(false);
   }, [formActive, formDirty, getProductById]);
 
+  const startProductCreate = useCallback(() => {
+    setSelectedProduct(null);
+    startProductEdit();
+  }, []);
   const startProductEdit = useCallback((id?: number) => {
     id && selectProduct(id);
     setFormActive(true);
     setFormDirty(false);
   }, [selectProduct]);
+  
   const concludeProductEdit = useCallback((product: Omit<ProductType, 'id'>, id?: number) => {
     setFormActive(false);
     const newProductList = productList.slice();
@@ -59,7 +64,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
       <ProductList
         products={productList}
         onSelect={selectProduct}
-        onNew={() => { setSelectedProduct(null); startProductEdit(); }}
+        onNew={startProductCreate}
         onEdit={startProductEdit}
         onDelete={deleteProduct}
         buttonsDisabled={formActive && formDirty}
