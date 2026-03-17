@@ -9,24 +9,24 @@ export default function ProductList({
   onCreate,
   onEdit,
   onDelete,
-  сhangeDisabled,
+  changeDisabled,
 }: {
   products: Array<ProductType>,
   onSelect: (id: number) => void,
   onCreate: () => void,
   onEdit: (id: number) => void,
   onDelete: (id: number) => void,
-  сhangeDisabled: boolean,
+  changeDisabled: boolean,
 }) {
   const [selected, setSelected] = useState<number | null>(null);
 
   const selectProduct = useCallback((id: number) => {
-    if (сhangeDisabled) {
+    if (changeDisabled) {
       return;
     }
     setSelected(id);
     onSelect(id);
-  }, [сhangeDisabled]);
+  }, [changeDisabled]);
 
   return (
     <>
@@ -46,7 +46,7 @@ export default function ProductList({
               key={product.id}
               product={product}
               selected={selected === product.id}
-              buttonsDisabled={сhangeDisabled}
+              buttonsDisabled={changeDisabled}
               onSelect={() => selectProduct(product.id)}
               onEdit={() => { setSelected(product.id); onEdit(product.id); }}
               onDelete={() => onDelete(product.id)}
@@ -56,7 +56,7 @@ export default function ProductList({
       </table>
       <button
         className="new-product-button"
-        disabled={сhangeDisabled}
+        disabled={changeDisabled}
         onClick={() => { setSelected(null); onCreate(); }}
       >New product</button>
     </>

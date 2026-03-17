@@ -53,7 +53,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
           setFormDirty(false);
         }}
         onDelete={deleteProduct}
-        сhangeDisabled={creating || (formActive && formDirty)}
+        changeDisabled={creating || (formActive && formDirty)}
       />
       {formActive && (
         <ProductEditForm
