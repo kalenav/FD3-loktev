@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { Product as ProductType } from "../../../../model/product.interface";
 import './ProductList.scss';
 import Product from './subcomponents/Product/Product';
@@ -20,13 +19,6 @@ export default function ProductList({
   onDelete: (id: number) => void,
   changeDisabled: boolean,
 }) {
-  const selectProduct = useCallback((id: number) => {
-    if (changeDisabled) {
-      return;
-    }
-    onSelect(id);
-  }, [changeDisabled]);
-
   return (
     <>
       <table className="table">
@@ -46,7 +38,7 @@ export default function ProductList({
               product={product}
               selected={selectedProductId === product.id}
               buttonsDisabled={changeDisabled}
-              onSelect={() => selectProduct(product.id)}
+              onSelect={() => !changeDisabled && onSelect(product.id)}
               onEdit={() => onEdit(product.id)}
               onDelete={() => onDelete(product.id)}
             />
