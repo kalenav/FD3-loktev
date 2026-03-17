@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Product as ProductType } from "../../../../model/product.interface";
-import Product from '../../../Product/Product';
 import './ProductList.scss';
+import Product from './subcomponents/Product/Product';
 
 export default function ProductList({
   products,

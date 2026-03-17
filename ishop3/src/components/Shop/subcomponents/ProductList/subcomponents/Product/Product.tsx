@@ -1,4 +1,4 @@
-import { Product as ProductType } from '../../model/product.interface';
+import { Product as ProductType } from '../../../../../../model/product.interface';
 import './Product.scss';
 
 export default function Product({
