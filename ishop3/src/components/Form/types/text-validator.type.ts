@@ -1,0 +1,1 @@
+export type TextValidator = (value: string) => string | null;
