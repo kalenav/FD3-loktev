@@ -3,7 +3,10 @@ export function BR2JSX({ text }: { text: string }) {
     <div>
       {text
         .split(/<br ?\/?>/)
-        .map((word, index, arr) => [word, (index < arr.length - 1) && <br />])
+        .map((word, index) => [
+          (index > 0) && <br key={index} />,
+          <span key={`${index}${word}`}>{word}</span>,
+        ])
         .flat()
       }
     </div>
