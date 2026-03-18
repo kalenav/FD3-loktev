@@ -62,7 +62,7 @@ export default function Shop({ products }: { products: Array<ProductType> }) {
           product={selectedProduct || undefined}
           onDirty={() => setFormDirty(true)}
           onSubmit={formValues => {
-            concludeProductEdit(formValues as Omit<ProductType, 'id'>, selectedProduct?.id);
+            concludeProductEdit(formValues, selectedProduct?.id);
             setFormActive(false);
             setCreating(false);
           }}
