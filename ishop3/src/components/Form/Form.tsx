@@ -46,10 +46,10 @@ export default function Form({
           validators={field.validators}
           onDirty={() => setDirty(true)}
           onChange={(value: string, validationErrors: Array<string>) => {
-            setState({
-              ...state,
+            setState(prevState => ({
+              ...prevState,
               [field.name]: { value, validationErrors },
-            });
+            }));
           }}
         />
       ))}
