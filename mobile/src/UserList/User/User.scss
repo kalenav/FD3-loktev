@@ -1,0 +1,9 @@
+.status:not(.editing) {
+  &.active {
+    background-color: green;
+  }
+
+  &.blocked {
+    background-color: red;
+  }
+}
