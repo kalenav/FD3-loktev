@@ -1,5 +1,7 @@
 import { EventEmitter } from "events";
 import { useCallback, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../redux/users.slice";
 import { IUser } from "../user.interface";
 import { User } from "./User/User";
 
@@ -11,11 +13,18 @@ const EMPTY_USER: Omit<IUser, 'id'> = {
   status: 'active',
 };
 
-export function UserList({ data }: { data: IUser[] }) {
-  const [users, setUsers] = useState(data);
+export function UserList() {
+  const dispatch = useDispatch();
+  const { list: users, error, isLoading } = useSelector((state: { users: {
+    list: IUser[]
+    error: string | null
+    isLoading: boolean
+  } }) => state.users);
+
   const addUser = useCallback(() => {
-    setUsers(prevUsers => [...prevUsers, { ...EMPTY_USER, id: (prevUsers.at(-1)?.id ?? 0) + 1 }]);
-  }, []);
+    const newId = users.at(-1)?.id ?? 0 + 1;
+    dispatch(setUsers([...users, { ...EMPTY_USER, id: newId }]));
+  }, [users]);
 
   const [statusFilter, setStatusFilter] = useState<null | 'active' | 'blocked'>(null);
   const filteredUsers = useMemo(() => {
@@ -28,19 +37,13 @@ export function UserList({ data }: { data: IUser[] }) {
   const actionsEventEmitter = useMemo(() => {
     const emitter = new EventEmitter();
     emitter.on('userEdit', (editedUser: IUser) => {
-      setUsers(prevUsers => prevUsers.map(user => user.id === editedUser.id ? editedUser : user));
+      dispatch(setUsers(users.map(user => user.id === editedUser.id ? editedUser : user)));
     });
     emitter.on('userDelete', (id: number) => {
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+      dispatch(setUsers(users.filter(user => user.id !== id)));
     });
     return emitter;
-  }, []);
-  // так и не понял, в чём конкретно здесь проблема. копилот сказал, что из-за дев режима
-  // компоненты маунтятся дважды и чето там куда-то туда-сюда и короче этот cleanup
-  // отрабатывает в неожиданный момент, из-за чего теряются подписчики
-  // useEffect(() => () => {
-  //   actionsEventEmitter.removeAllListeners();
-  // }, [actionsEventEmitter]);
+  }, [users]); // оптимизация рендеринга потерялась - с каждым изменением users приходится делать новый эмиттер
 
   return (
     <div>
@@ -49,7 +52,9 @@ export function UserList({ data }: { data: IUser[] }) {
         <button onClick={() => setStatusFilter('active')}>Активные</button>
         <button onClick={() => setStatusFilter('blocked')}>Заблокированные</button>
       </div>
-      <table className="table">
+      {isLoading && <div>zagruzka...</div>}
+      {error && <div style={{ color: 'red' }}>oh noes!! {error}</div>}
+      {!isLoading && !error &&<table className="table">
         <thead>
           <tr>
             <th>Фамилия</th>
@@ -70,7 +75,7 @@ export function UserList({ data }: { data: IUser[] }) {
             />
           ))}
         </tbody>
-      </table>
+      </table>}
       <button onClick={addUser}>Добавить клиента</button>
     </div>
   );
