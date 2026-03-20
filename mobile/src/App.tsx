@@ -9,7 +9,7 @@ function App() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => { dispatch(fetchUsers as unknown as UnknownAction /* мда */) }, []);
+  useEffect(() => { dispatch(fetchUsers() as unknown as UnknownAction /* всё ещё мда */) }, []);
 
   return (
     <UserList />

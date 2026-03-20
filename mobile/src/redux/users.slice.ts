@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../user.interface";
+import { fetchUsers } from "./fetch-users";
 
 const userSlice = createSlice({
   name: "users",
@@ -9,18 +10,32 @@ const userSlice = createSlice({
     isLoading: false,
   },
   reducers: {
-    setUsers(state, action: { payload: IUser[] }) {
-      state.list = action.payload.slice();
+    addUser(state, action: { payload: IUser }) {
+      state.list.push(action.payload);
     },
-    setError(state, action: { payload: string | null }) {
-      state.error = action.payload;
+    updateUser(state, action: { payload: IUser }) {
+      state.list = state.list.map(user => user.id === action.payload.id ? action.payload : user);
     },
-    setIsLoading(state, action: { payload: boolean }) {
-      state.isLoading = action.payload;
+    deleteUser(state, action: { payload: number }) {
+      state.list = state.list.filter(user => user.id !== action.payload);
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = action.payload;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? 'chto-to poshlo ne tak...';
+      });
   }
 });
 
-export const { setUsers, setError, setIsLoading } = userSlice.actions;
+export const { addUser, updateUser, deleteUser } = userSlice.actions;
 
 export default userSlice.reducer;

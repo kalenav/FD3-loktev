@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from "../redux/users.slice";
+import { addUser, deleteUser, updateUser } from "../redux/users.slice";
 import { IUser } from "../user.interface";
 import { User } from "./User/User";
 
@@ -21,9 +21,9 @@ export function UserList() {
     isLoading: boolean
   } }) => state.users);
 
-  const addUser = useCallback(() => {
+  const onAddUser = useCallback(() => {
     const newId = users.at(-1)?.id ?? 0 + 1;
-    dispatch(setUsers([...users, { ...EMPTY_USER, id: newId }]));
+    dispatch(addUser({ ...EMPTY_USER, id: newId }));
   }, [users]);
 
   const [statusFilter, setStatusFilter] = useState<null | 'active' | 'blocked'>(null);
@@ -36,12 +36,8 @@ export function UserList() {
 
   const actionsEventEmitter = useMemo(() => {
     const emitter = new EventEmitter();
-    emitter.on('userEdit', (editedUser: IUser) => {
-      dispatch(setUsers(users.map(user => user.id === editedUser.id ? editedUser : user)));
-    });
-    emitter.on('userDelete', (id: number) => {
-      dispatch(setUsers(users.filter(user => user.id !== id)));
-    });
+    emitter.on('userEdit', (editedUser: IUser) => dispatch(updateUser(editedUser)));
+    emitter.on('userDelete', (id: number) => dispatch(deleteUser(id)));
     return emitter;
   }, [users]); // оптимизация рендеринга потерялась - с каждым изменением users приходится делать новый эмиттер
 
@@ -76,7 +72,7 @@ export function UserList() {
           ))}
         </tbody>
       </table>}
-      <button onClick={addUser}>Добавить клиента</button>
+      <button onClick={onAddUser}>Добавить клиента</button>
     </div>
   );
 }
