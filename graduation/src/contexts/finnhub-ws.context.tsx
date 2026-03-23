@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { throttleStockDataPoint } from "../redux/stock-data-throttler.middleware";
+import { throttleStockData } from "../redux/stock-data-throttler.middleware";
+import type { FinnhubTradeMessage } from "../types/finnhub-trade-message.interface";
 
 const FinnhubWebSocketContext = createContext<{
   subscribeToSymbolUpdates: (symbol: string) => void,
@@ -25,17 +26,13 @@ export function FinnhubWebSocketProvider({ children }: { children: React.ReactNo
           ws.send(JSON.stringify({ type: 'pong' }));
           break;
         case 'trade':
-          let tradeWithMaxPrice = message.data[0];
-          for (const trade of message.data) {
-            if (trade.p > tradeWithMaxPrice.p) {
-              tradeWithMaxPrice = trade;
-            }
-          }
-          dispatch(throttleStockDataPoint({
-            stockSymbol: tradeWithMaxPrice.s,
-            timestamp: tradeWithMaxPrice.t,
-            price: tradeWithMaxPrice.p,
-          }));
+          const symbolToNewTrades: Record<string, Array<{ price: number, timestamp: number }>> = {};
+          (message as FinnhubTradeMessage).data.forEach(trade => {
+            (symbolToNewTrades[trade.s] ??= []).push({ price: trade.p, timestamp: trade.t });
+          });
+          Object.keys(symbolToNewTrades).forEach(stockSymbol => {
+            dispatch(throttleStockData({ stockSymbol, newTrades: symbolToNewTrades[stockSymbol] }));
+          });
           break;
         default:
           break;
