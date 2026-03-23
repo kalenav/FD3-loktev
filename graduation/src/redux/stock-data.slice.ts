@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { MAX_DATA_POINTS_PER_STOCK } from "../constants/constants";
 
 const stockDataSlice = createSlice({
   name: 'stockData',
@@ -7,10 +8,10 @@ const stockDataSlice = createSlice({
     addStockDataPoint: (state, action) => {
       const { stockSymbol, timestamp, price } = action.payload;
       state[stockSymbol] ??= [];
-      if (state[stockSymbol].at(-1)?.timestamp === timestamp) {
-        return;
-      }
       state[stockSymbol].push({ timestamp, price });
+      if (state[stockSymbol].length > MAX_DATA_POINTS_PER_STOCK) {
+        state[stockSymbol].shift();
+      }
     }
   }
 });
