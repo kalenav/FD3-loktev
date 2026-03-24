@@ -11,8 +11,8 @@ export const StockPriceChart = memo(({ symbol }: { symbol: string }) => {
     if (liveData.length === 0) {
       return;
     }
-    // three orders of magnitute less
-    const radius = Math.pow(10, Math.floor(Math.log10(liveData[0].price)) - 3);
+    // four orders of magnitute less
+    const radius = Math.pow(10, Math.floor(Math.log10(liveData[0].price)) - 4);
     return {
       min: liveData[0].price - radius,
       max: liveData[0].price + radius,
