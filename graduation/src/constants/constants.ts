@@ -1,13 +1,15 @@
 export const MAX_DATA_POINTS_PER_STOCK = 300;
 export const STOCK_DATA_THROTTLE_INTERVAL_MS = 200;
-export const STOCK_PRICE_DECIMAL_PLACES = 3;
+export const STOCK_PRICE_DECIMAL_PLACES = 4;
+export const PRICE_CHART_RIGHT_BUFFER_S = 15;
+export const PRICE_CHART_LEFT_BUFFER_S = 60;
+export const STOCK_CHART_LIST_ANIMATION_DURATION_MS = 450;
 export const QUOTE_CURRENCIES = [
   "USDT",
   "BUSD",
   "USDC",
   "FDUSD",
 ];
-
 export const BASE_CURRENCIES = [
   "BTC",
   "ETH",

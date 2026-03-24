@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { STOCK_CHART_LIST_ANIMATION_DURATION_MS } from "../../constants/constants";
 import { useFinnhubWS } from "../../contexts/finnhub-ws.context";
 import { untrackSymbol } from "../../redux/selected-symbols.slice";
 import type { StockDataState } from "../../redux/stock-data.slice";
@@ -7,8 +8,6 @@ import { SymbolSelect } from "../SymbolSelect/SymbolSelect";
 import { StockCard } from "./StockCard/StockCard";
 import { StockPriceChart } from "./StockPriceChart/StockPriceChart";
 import './SymbolChartList.scss';
-
-const ANIMATION_DURATION = 450;
 
 export const SymbolChartList = memo(() => {
   const selectedSymbols = useSelector((state: { selectedSymbols: Array<string> }) => state.selectedSymbols);
@@ -22,13 +21,12 @@ export const SymbolChartList = memo(() => {
   const [leavingSymbol, setLeavingSymbol] = useState<string | null>(null);
   const [enteringSymbol, setEnteringSymbol] = useState<string | null>(null);
 
-  // detect newly added symbol for enter animation
   useEffect(() => {
     const addedSymbol = selectedSymbols.find(symbol => !prevSymbols.current.includes(symbol));
     if (!addedSymbol) return;
     prevSymbols.current = selectedSymbols;
     setEnteringSymbol(addedSymbol);
-    const id = setTimeout(() => setEnteringSymbol(null), ANIMATION_DURATION);
+    const id = setTimeout(() => setEnteringSymbol(null), STOCK_CHART_LIST_ANIMATION_DURATION_MS);
     return () => clearTimeout(id);
   }, [selectedSymbols]);
 
@@ -36,11 +34,11 @@ export const SymbolChartList = memo(() => {
     dispatch(untrackSymbol(symbol));
     unsubscribeFromSymbolUpdates?.(symbol);
 
-    setSelectedSymbol(null);
+    (symbol === selectedSymbol) && setSelectedSymbol(null);
     setLeavingSymbol(symbol);
-    const id = setTimeout(() => setLeavingSymbol(null), ANIMATION_DURATION);
+    const id = setTimeout(() => setLeavingSymbol(null), STOCK_CHART_LIST_ANIMATION_DURATION_MS);
     return () => clearTimeout(id);
-  }, [selectedSymbol, selectedSymbols, leavingSymbol, unsubscribeFromSymbolUpdates]);
+  }, [selectedSymbol, unsubscribeFromSymbolUpdates]);
 
   const getLastPrice = (symbol: string) => {
     const data = stockData[symbol];
