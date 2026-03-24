@@ -6,13 +6,15 @@ import { PriceChart } from "./PriceChart/PriceChart";
 export const StockPriceChart = memo(({ symbol }: { symbol: string }) => {
   const { [symbol]: liveData } = useLiveStockData([symbol]);
   const fromTimestamp = useMemo(() => liveData[0]?.timestamp, [liveData[0]]);
-  const toTimestamp = useMemo(() => fromTimestamp && (fromTimestamp + (MAX_DATA_POINTS_PER_STOCK * 1.25) * STOCK_DATA_THROTTLE_INTERVAL_MS), [fromTimestamp]);
+  const toTimestamp = useMemo(() => {
+    return fromTimestamp && (fromTimestamp + (MAX_DATA_POINTS_PER_STOCK * 1.25) * STOCK_DATA_THROTTLE_INTERVAL_MS);
+  }, [fromTimestamp]);
   const yAxisSoftRange = useMemo(() => {
     if (liveData.length === 0) {
       return;
     }
-    // two orders of magnitute less
-    const radius = Math.pow(10, Math.floor(Math.log10(liveData[0].price)) - 2);
+    // three orders of magnitute less
+    const radius = Math.pow(10, Math.floor(Math.log10(liveData[0].price)) - 3);
     return {
       min: liveData[0].price - radius,
       max: liveData[0].price + radius,

@@ -17,7 +17,7 @@ export function PriceChart({
   xAxisLabel?: string,
   yAxisLabel?: string,
 }) {
-  const zoneBreakpoints = useMemo(() => {
+  const zones = useMemo(() => {
     if (data.length < 2) {
       return [];
     }
@@ -38,6 +38,9 @@ export function PriceChart({
   return (
     <Chart
       options={{
+        time: {
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
         chart: {
           backgroundColor: "#10151f",
         },
@@ -52,7 +55,7 @@ export function PriceChart({
           },
         },
         xAxis: {
-          type: "datetime",
+          type: "datetime" as const,
           min: fromTimestamp,
           max: toTimestamp,
           labels: {
@@ -98,7 +101,7 @@ export function PriceChart({
           lineWidth: 3,
           showInLegend: false,
           zoneAxis: "x",
-          zones: zoneBreakpoints,
+          zones: zones,
           marker: {
             enabled: false,
             states: {
