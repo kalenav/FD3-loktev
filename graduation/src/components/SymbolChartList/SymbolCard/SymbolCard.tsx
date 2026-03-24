@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import './StockCard.scss';
+import './SymbolCard.scss';
 
-export const StockCard = memo(({
+export const SymbolCard = memo(({
   name,
   price,
   isSelected,

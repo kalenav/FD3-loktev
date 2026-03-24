@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { throttleStockData } from "../redux/stock-data-throttler.middleware";
+import { throttleSymbolData } from "../redux/symbol-data-throttler.middleware";
 import type { FinnhubTradeMessage } from "../types/finnhub-trade-message.interface";
 
 const FinnhubWebSocketContext = createContext<{
@@ -32,8 +32,8 @@ export function FinnhubWebSocketProvider({ children }: { children: React.ReactNo
           (message as FinnhubTradeMessage).data.forEach(trade => {
             (symbolToNewTrades[trade.s] ??= []).push({ price: trade.p, timestamp: trade.t });
           });
-          Object.keys(symbolToNewTrades).forEach(stockSymbol => {
-            dispatch(throttleStockData({ stockSymbol, newTrades: symbolToNewTrades[stockSymbol] }));
+          Object.keys(symbolToNewTrades).forEach(symbol => {
+            dispatch(throttleSymbolData({ symbol, newTrades: symbolToNewTrades[symbol] }));
           });
           break;
         default:

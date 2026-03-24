@@ -1,18 +1,18 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { STOCK_CHART_LIST_ANIMATION_DURATION_MS } from "../../constants/constants";
+import { SYMBOL_CHART_LIST_ANIMATION_DURATION_MS } from "../../constants/constants";
 import { useFinnhubWS } from "../../contexts/finnhub-ws.context";
 import { untrackSymbol } from "../../redux/selected-symbols.slice";
-import type { StockDataState } from "../../redux/stock-data.slice";
+import type { SymbolDataState } from "../../redux/symbol-data.slice";
 import { SymbolSelect } from "../SymbolSelect/SymbolSelect";
-import { StockCard } from "./StockCard/StockCard";
-import { StockPriceChart } from "./StockPriceChart/StockPriceChart";
+import { SymbolCard } from "./SymbolCard/SymbolCard";
 import './SymbolChartList.scss';
+import { SymbolPriceChart } from "./SymbolPriceChart/SymbolPriceChart";
 
 export const SymbolChartList = memo(() => {
   const selectedSymbols = useSelector((state: { selectedSymbols: Array<string> }) => state.selectedSymbols);
   const prevSymbols = useRef<string[]>(selectedSymbols);
-  const stockData = useSelector((state: { stockData: StockDataState }) => state.stockData);
+  const symbolData = useSelector((state: { symbolData: SymbolDataState }) => state.symbolData);
   const { unsubscribeFromSymbolUpdates } = useFinnhubWS();
   const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ export const SymbolChartList = memo(() => {
     if (!addedSymbol) return;
     prevSymbols.current = selectedSymbols;
     setEnteringSymbol(addedSymbol);
-    const id = setTimeout(() => setEnteringSymbol(null), STOCK_CHART_LIST_ANIMATION_DURATION_MS);
+    const id = setTimeout(() => setEnteringSymbol(null), SYMBOL_CHART_LIST_ANIMATION_DURATION_MS);
     return () => clearTimeout(id);
   }, [selectedSymbols]);
 
@@ -36,12 +36,12 @@ export const SymbolChartList = memo(() => {
 
     (symbol === selectedSymbol) && setSelectedSymbol(null);
     setLeavingSymbol(symbol);
-    const id = setTimeout(() => setLeavingSymbol(null), STOCK_CHART_LIST_ANIMATION_DURATION_MS);
+    const id = setTimeout(() => setLeavingSymbol(null), SYMBOL_CHART_LIST_ANIMATION_DURATION_MS);
     return () => clearTimeout(id);
   }, [selectedSymbol, unsubscribeFromSymbolUpdates]);
 
   const getLastPrice = (symbol: string) => {
-    const data = stockData[symbol];
+    const data = symbolData[symbol];
     if (!data?.length) return null;
     return data[data.length - 1].price;
   };
@@ -61,7 +61,7 @@ export const SymbolChartList = memo(() => {
         </div>
         <div className="symbols-container">
           {selectedSymbols.map(symbol => (
-            <StockCard
+            <SymbolCard
               key={symbol}
               name={symbol}
               price={getLastPrice(symbol)}
@@ -77,7 +77,7 @@ export const SymbolChartList = memo(() => {
       <div className="chart-container">
         {selectedSymbol && (
           <div className="chart-content">
-            <StockPriceChart symbol={selectedSymbol} />
+            <SymbolPriceChart symbol={selectedSymbol} />
           </div>
         )}
       </div>
