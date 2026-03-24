@@ -5,8 +5,10 @@ import type { FinnhubTradeMessage } from "../types/finnhub-trade-message.interfa
 
 const FinnhubWebSocketContext = createContext<{
   subscribeToSymbolUpdates: (symbol: string) => void,
+  unsubscribeFromSymbolUpdates?: (symbol: string) => void
 }>({
   subscribeToSymbolUpdates: () => {},
+  unsubscribeFromSymbolUpdates: () => {}
 });
 
 export function FinnhubWebSocketProvider({ children }: { children: React.ReactNode }) {
@@ -59,8 +61,17 @@ export function FinnhubWebSocketProvider({ children }: { children: React.ReactNo
     ws.send(JSON.stringify({ type: "subscribe", symbol }));
   }, [ws]);
 
+  const unsubscribeFromSymbolUpdates = useCallback((symbol: string) => {
+    if (ws.readyState !== WebSocket.OPEN) {
+      console.warn('websocket not open :(');
+      return;
+    }
+    ws.send(JSON.stringify({ type: "unsubscribe", symbol }));
+  }, [ws]);
+
+
   return (
-    <FinnhubWebSocketContext.Provider value={{ subscribeToSymbolUpdates }}>
+    <FinnhubWebSocketContext.Provider value={{ subscribeToSymbolUpdates, unsubscribeFromSymbolUpdates }}>
       {children}
     </FinnhubWebSocketContext.Provider>
   );
