@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
-import { MAX_DATA_POINTS_PER_STOCK, STOCK_DATA_THROTTLE_INTERVAL_MS } from "../../constants/constants";
-import { useLiveStockData } from "../../hooks/use-live-stock-data";
+import { MAX_DATA_POINTS_PER_STOCK, STOCK_DATA_THROTTLE_INTERVAL_MS } from "../../../constants/constants";
+import { useLiveStockData } from "../../../hooks/use-live-stock-data";
 import { PriceChart } from "./PriceChart/PriceChart";
 
 export const StockPriceChart = memo(({ symbol }: { symbol: string }) => {
