@@ -1,6 +1,6 @@
 import { Chart, Credits, Legend, Series } from "@highcharts/react";
 import "highcharts/esm/modules/no-data-to-display.src.js";
-import { useEffect, useRef } from "react";
+import { useMemo } from "react";
 
 export function PriceChart({
   data,
@@ -17,20 +17,29 @@ export function PriceChart({
   xAxisLabel?: string,
   yAxisLabel?: string,
 }) {
-  const zones = useRef<Array<{ value: number; color: string, direction: number }>>([]);
-  useEffect(() => {
+  // zones have to be recalculated every render, since this single component
+  // is used by all symbols, and zones are unique for each symbol's data.
+  // I considered a hybrid approach where zones would only be fully recalculated
+  // when the symbol changed and adjusted in-place if only data changed,
+  // but that would require this component to be aware of the active symbol
+  // or some other counterintuitive mechanism, which sucks
+  const zones = useMemo(() => {
     if (data.length < 2) {
-      return;
+      return [];
     }
-    (data[0].timestamp > zones.current[0]?.value) && zones.current.shift();
-    const lastZoneDirection = zones.current.at(-1)?.direction;
-    const currDirection = Math.sign(data.at(-1)!.price - data.at(-2)!.price) || lastZoneDirection || 1;
-    (currDirection === lastZoneDirection) && zones.current.pop();
-    zones.current.push({
-      value: data.at(-1)!.timestamp,
-      color: currDirection === 1 ? "green" : "red",
-      direction: currDirection
+    const breakpoints: Array<{ direction: number, value: number }> = [];
+    let prevDirection: number;
+    data.slice(1).forEach((point, index) => {
+      const direction = Math.sign(point.price - data[index].price) || prevDirection || 1;
+      (breakpoints.at(-1)?.direction === direction) && breakpoints.pop();
+      prevDirection = direction;
+      breakpoints.push({ direction, value: point.timestamp });
+
     });
+    return breakpoints.map(breakpoint => ({
+      ...breakpoint,
+      color: breakpoint.direction === 1 ? "green" : "red",
+    }));
   }, [data]);
 
   return (
@@ -99,7 +108,7 @@ export function PriceChart({
           lineWidth: 3,
           showInLegend: false,
           zoneAxis: "x",
-          zones: zones.current,
+          zones: zones,
           marker: {
             enabled: false,
             states: {

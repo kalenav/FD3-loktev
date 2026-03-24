@@ -1,0 +1,19 @@
+.symbol-chart-list {
+  display: grid;
+  grid-template-columns: fit-content auto;
+  grid-template-areas: 
+    "add-new chart"
+    "symbol-list chart";
+
+  .add-new-symbol-container {
+    grid-area: add-new;
+  }
+
+  .symbols-container {
+    grid-area: symbol-list;
+  }
+
+  .chart-container {
+    grid-area: chart;
+  }
+}
