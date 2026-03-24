@@ -12,10 +12,13 @@ const stockDataSlice = createSlice({
       if (state[stockSymbol].length > MAX_DATA_POINTS_PER_STOCK) {
         state[stockSymbol].shift();
       }
+    },
+    deleteStockData: (state, action) => {
+      delete state[action.payload];
     }
   }
 });
 
 export type StockDataState = ReturnType<typeof stockDataSlice.reducer>;
-export const { addStockDataPoint } = stockDataSlice.actions;
+export const { addStockDataPoint, deleteStockData } = stockDataSlice.actions;
 export default stockDataSlice.reducer;

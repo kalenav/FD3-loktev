@@ -2,7 +2,7 @@ import { memo, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BASE_CURRENCIES, QUOTE_CURRENCIES } from "../../constants/constants";
 import { useFinnhubWS } from "../../contexts/finnhub-ws.context";
-import { addSymbol } from "../../redux/selected-symbols.slice";
+import { trackSymbol } from "../../redux/selected-symbols.slice";
 
 export const SymbolSelect = memo(({
   baseCurrencies = BASE_CURRENCIES,
@@ -20,7 +20,7 @@ export const SymbolSelect = memo(({
 
   const onConfirm = useCallback(() => {
     const fullSymbol = `BINANCE:${baseAsset}${quoteAsset}`;
-    dispatch(addSymbol(fullSymbol));
+    dispatch(trackSymbol(fullSymbol));
     subscribeToSymbolUpdates(fullSymbol);
     onSelect();
   }, [baseAsset, quoteAsset]);
