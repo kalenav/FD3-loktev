@@ -1,5 +1,42 @@
+:root {
+  --bg-body: #0a0c11;
+  --bg-surface: #111419;
+  --bg-surface-hover: #181b23;
+  --bg-elevated: #1e222b;
+  --border: #272b36;
+  --border-active: #3a3f4f;
+  --text-primary: #dde0e7;
+  --text-secondary: #767b8e;
+  --text-muted: #4a4f60;
+  --danger: #a03030;
+  --danger-hover: #c04040;
+  --radius: 5px;
+  --timing: 300ms;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+select {
+  font-family: inherit;
 }

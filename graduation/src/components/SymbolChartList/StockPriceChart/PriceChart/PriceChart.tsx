@@ -38,7 +38,7 @@ export function PriceChart({
     });
     return breakpoints.map(breakpoint => ({
       ...breakpoint,
-      color: breakpoint.direction === 1 ? "green" : "red",
+      color: breakpoint.direction === 1 ? "#5a8a5a" : "#8a4a4a",
     }));
   }, [data]);
 
@@ -49,49 +49,57 @@ export function PriceChart({
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         chart: {
-          backgroundColor: "#10151f",
+          backgroundColor: "transparent",
+          borderWidth: 0,
+          plotBorderWidth: 0,
+          style: {
+            fontFamily: "'Inter', system-ui, sans-serif",
+          },
         },
         lang: {
           noData: "Waiting for live data...",
         },
         noData: {
           style: {
-            color: "white",
-            fontSize: "16px",
-            fontWeight: "normal",
+            color: "#767b8e",
+            fontSize: "14px",
+            fontWeight: "400",
           },
         },
         xAxis: {
           type: "datetime" as const,
           min: fromTimestamp,
           max: toTimestamp,
+          lineColor: "#272b36",
+          tickColor: "#272b36",
           labels: {
             format: "{value:%H:%M:%S}",
             rotation: -45,
             style: {
-              color: "white",
+              color: "#767b8e",
               fontSize: "10px",
             },
           },
           title: {
             text: xAxisLabel,
             style: {
-              color: "white",
+              color: "#4a4f60",
             },
           },
         },
         yAxis: {
           softMin: yAxisSoftRange?.min,
           softMax: yAxisSoftRange?.max,
+          gridLineColor: "#1e222b",
           labels: {
             style: {
-              color: "white",
+              color: "#767b8e",
             },
           },
           title: {
             text: yAxisLabel,
             style: {
-              color: "white",
+              color: "#4a4f60",
             },
           },
         },
@@ -105,7 +113,7 @@ export function PriceChart({
         options={{
           name: "Price",
           color: "transparent",
-          lineWidth: 3,
+          lineWidth: 2,
           showInLegend: false,
           zoneAxis: "x",
           zones: zones,

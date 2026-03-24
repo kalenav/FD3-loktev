@@ -3,15 +3,18 @@ import { useDispatch } from "react-redux";
 import { BASE_CURRENCIES, QUOTE_CURRENCIES } from "../../constants/constants";
 import { useFinnhubWS } from "../../contexts/finnhub-ws.context";
 import { trackSymbol } from "../../redux/selected-symbols.slice";
+import './SymbolSelect.scss';
 
 export const SymbolSelect = memo(({
   baseCurrencies = BASE_CURRENCIES,
   quoteCurrencies = QUOTE_CURRENCIES,
-  onSelect = () => {},
+  onSelect,
+  onCancel,
 }: {
   baseCurrencies?: Array<string>,
   quoteCurrencies?: Array<string>,
   onSelect?: () => void,
+  onCancel?: () => void,
 }) => {
   const [baseAsset, setBaseAsset] = useState(baseCurrencies[0]);
   const [quoteAsset, setQuoteAsset] = useState(quoteCurrencies[0]);
@@ -22,24 +25,29 @@ export const SymbolSelect = memo(({
     const fullSymbol = `BINANCE:${baseAsset}${quoteAsset}`;
     dispatch(trackSymbol(fullSymbol));
     subscribeToSymbolUpdates(fullSymbol);
-    onSelect();
+    onSelect?.();
   }, [baseAsset, quoteAsset]);
 
-  return <div>
-    <select value={baseAsset} onChange={e => setBaseAsset(e.target.value)}>
-      {baseCurrencies.map((symbol) => (
-        <option key={symbol} value={symbol}>
-          {symbol}
-        </option>
-      ))}
-    </select>
-    <select value={quoteAsset} onChange={e => setQuoteAsset(e.target.value)}>
-      {quoteCurrencies.filter(quote => quote !== baseAsset).map((symbol) => (
-        <option key={symbol} value={symbol}>
-          {symbol}
-        </option>
-      ))}
-    </select>
-    <button onClick={onConfirm}>Confirm</button>
+  return <div className="symbol-select">
+    <div className="select-row">
+      <select value={baseAsset} onChange={e => setBaseAsset(e.target.value)}>
+        {baseCurrencies.map((symbol) => (
+          <option key={symbol} value={symbol}>
+            {symbol}
+          </option>
+        ))}
+      </select>
+      <select value={quoteAsset} onChange={e => setQuoteAsset(e.target.value)}>
+        {quoteCurrencies.filter(quote => quote !== baseAsset).map((symbol) => (
+          <option key={symbol} value={symbol}>
+            {symbol}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div className="select-row">
+      <button className="btn-confirm" onClick={onConfirm}>Confirm</button>
+      {onCancel && <button className="btn-cancel" onClick={onCancel}>Cancel</button>}
+    </div>
   </div>;
 });
