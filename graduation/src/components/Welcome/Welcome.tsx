@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { SymbolSelect } from "../SymbolSelect/SymbolSelect";
 
-export function Welcome() {
+export const Welcome = memo(() => {
   return (
     <div>
       <h2>Welcome!</h2>
@@ -8,4 +9,4 @@ export function Welcome() {
       <SymbolSelect />
     </div>
   );
-}
+});
