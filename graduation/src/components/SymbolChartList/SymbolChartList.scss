@@ -106,9 +106,7 @@ $border-val: 1px solid var(--border);
   }
 
   @media (max-width: 560px) {
-    .symbol-chart-list {
-      flex-direction: column;
-    }
+    flex-direction: column;
 
     .sidebar {
       width: 100%;
