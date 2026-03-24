@@ -15,14 +15,65 @@ $border-val: 1px solid var(--border);
     flex-direction: column;
     background: var(--bg-body);
     z-index: 1;
-  }
 
-  .add-new-symbol-container {
-    padding: 0.75rem;
-    border-bottom: $border-val;
-    border-right: $border-val;
+    .add-new-symbol-container {
+      padding: 0.75rem;
+      border-bottom: $border-val;
+      border-right: $border-val;
 
-    .btn-add {
+      .btn-add {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        background: var(--bg-surface);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+        transition: color var(--timing) ease, border-color var(--timing) ease,
+          background var(--timing) ease;
+
+        &:hover {
+          color: var(--text-primary);
+          border-color: var(--border-active);
+          background: var(--bg-surface-hover);
+        }
+      }
+
+      .symbol-select {
+        gap: 0.5rem;
+
+        .select-row {
+          gap: 0.35rem;
+        }
+
+        select {
+          flex: 1;
+          min-width: 0;
+        }
+      }
+    }
+
+    .symbols-container {
+      flex: 1;
+      overflow-y: auto;
+      border-right: $border-val;
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+    }
+
+    .btn-help {
       width: 100%;
       padding: 0.5rem;
       font-size: 0.8rem;
@@ -40,38 +91,6 @@ $border-val: 1px solid var(--border);
         background: var(--bg-surface-hover);
       }
     }
-
-    .symbol-select {
-      gap: 0.5rem;
-
-      .select-row {
-        gap: 0.35rem;
-      }
-
-      select {
-        flex: 1;
-        min-width: 0;
-      }
-    }
-  }
-
-  .symbols-container {
-    flex: 1;
-    overflow-y: auto;
-    border-right: $border-val;
-
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
   }
 
   .chart-container {
@@ -81,21 +100,21 @@ $border-val: 1px solid var(--border);
     display: flex;
     align-items: stretch;
     position: relative;
-  }
 
-  .chart-content {
-    flex: 1;
-    min-width: 0;
-    animation: chart-fade-in 300ms ease;
-  }
+    .chart-content {
+      flex: 1;
+      min-width: 0;
+      animation: chart-fade-in 300ms ease;
+    }
 
-  .chart-empty {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    .chart-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
   }
 
   @media (max-width: 700px) {
@@ -113,14 +132,14 @@ $border-val: 1px solid var(--border);
       min-width: 0;
       max-height: 40vh;
       border-bottom: $border-val;
-    }
 
-    .add-new-symbol-container {
-      border-right: none;
-    }
+      .add-new-symbol-container {
+        border-right: none;
+      }
 
-    .symbols-container {
-      border-right: none;
+      .symbols-container {
+        border-right: none;
+      }
     }
 
     .chart-container {

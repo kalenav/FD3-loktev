@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
 import { SYMBOL_CHART_LIST_ANIMATION_DURATION_MS } from "../../constants/constants";
 import { useFinnhubWS } from "../../contexts/finnhub-ws.context";
 import { untrackSymbol } from "../../redux/selected-symbols.slice";
@@ -73,6 +74,9 @@ export const SymbolChartList = memo(() => {
             />
           ))}
         </div>
+        <Link to="/help">
+          <button className="btn-help">Help</button>
+        </Link>
       </div>
       <div className="chart-container">
         {selectedSymbol && (
