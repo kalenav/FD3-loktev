@@ -1,11 +1,11 @@
 import { memo, useMemo } from "react";
-import { PRICE_CHART_LEFT_BUFFER_S, PRICE_CHART_RIGHT_BUFFER_S } from "../../../constants/constants";
+import { MAX_DATA_POINTS_PER_STOCK, PRICE_CHART_RIGHT_BUFFER_S, STOCK_DATA_THROTTLE_INTERVAL_MS } from "../../../constants/constants";
 import { useLiveStockData } from "../../../hooks/use-live-stock-data";
 import { PriceChart } from "./PriceChart/PriceChart";
 
 export const StockPriceChart = memo(({ symbol }: { symbol: string }) => {
   const { [symbol]: liveData } = useLiveStockData([symbol]);
-  const leftBuffer = useMemo(() => PRICE_CHART_LEFT_BUFFER_S * 1000, []);
+  const leftBuffer = useMemo(() => MAX_DATA_POINTS_PER_STOCK * STOCK_DATA_THROTTLE_INTERVAL_MS, []);
   const rightBuffer = useMemo(() => PRICE_CHART_RIGHT_BUFFER_S * 1000, []);
   const yAxisSoftRange = useMemo(() => {
     if (liveData.length === 0) {
