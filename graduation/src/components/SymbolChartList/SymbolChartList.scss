@@ -1,6 +1,6 @@
 .symbol-chart-list {
   display: grid;
-  grid-template-columns: fit-content auto;
+  grid-template-columns: auto 1fr;
   grid-template-areas: 
     "add-new chart"
     "symbol-list chart";
@@ -15,5 +15,6 @@
 
   .chart-container {
     grid-area: chart;
+    min-width: 0;
   }
 }
