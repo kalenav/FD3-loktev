@@ -16,11 +16,10 @@ function createStockDataThrottlerMiddleware(): Middleware {
   return store => {
     const symbolToNewTrades = new Map<string, Array<{ price: number, timestamp: number }>>();
     setInterval(() => {
-      const stockData = store.getState().stockData;
-      const symbolsToUpdate = [...new Set([...Object.keys(stockData), ...symbolToNewTrades.keys()])];
-      symbolsToUpdate.forEach(stockSymbol => {
+      const { stockData, selectedSymbols } = store.getState();
+      selectedSymbols.forEach((stockSymbol: string) => {
         const newTrades = symbolToNewTrades.get(stockSymbol);
-        const price = newTrades?.length ? averagePriceOfTrades(newTrades) : stockData[stockSymbol].at(-1)?.price;
+        const price = newTrades?.length ? averagePriceOfTrades(newTrades) : stockData[stockSymbol]?.at(-1)?.price;
         (price !== undefined) && store.dispatch(addStockDataPoint({ stockSymbol, price, timestamp: Date.now() }));
       });
       symbolToNewTrades.clear();
