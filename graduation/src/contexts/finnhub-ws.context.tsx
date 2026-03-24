@@ -6,7 +6,7 @@ import type { FinnhubTradeMessage } from "../types/finnhub-trade-message.interfa
 const FinnhubWebSocketContext = createContext<{
   subscribeToSymbolUpdates: (symbol: string) => void,
 }>({
-  subscribeToSymbolUpdates: () => { },
+  subscribeToSymbolUpdates: () => {},
 });
 
 export function FinnhubWebSocketProvider({ children }: { children: React.ReactNode }) {

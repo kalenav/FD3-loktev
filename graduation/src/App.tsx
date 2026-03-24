@@ -1,8 +1,8 @@
-import { StockPriceChart } from "./components/StockPriceChart/StockPriceChart";
+import { Welcome } from "./components/Welcome/Welcome";
 
 function App() {
   return (
-    <StockPriceChart symbol="BINANCE:BTCUSDT" />
+    <Welcome />
   )
 }
 
