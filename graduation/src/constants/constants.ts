@@ -3,9 +3,6 @@ export const STOCK_DATA_THROTTLE_INTERVAL_MS = 200;
 export const STOCK_PRICE_DECIMAL_PLACES = 3;
 export const QUOTE_CURRENCIES = [
   "USDT",
-  "BTC",
-  "ETH",
-  "BNB",
   "BUSD",
   "USDC",
   "FDUSD",
