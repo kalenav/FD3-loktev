@@ -7,9 +7,11 @@ import { addSymbol } from "../../redux/selected-symbols.slice";
 export const SymbolSelect = memo(({
   baseCurrencies = BASE_CURRENCIES,
   quoteCurrencies = QUOTE_CURRENCIES,
+  onSelect = () => {},
 }: {
   baseCurrencies?: Array<string>,
   quoteCurrencies?: Array<string>,
+  onSelect?: () => void,
 }) => {
   const [baseAsset, setBaseAsset] = useState(baseCurrencies[0]);
   const [quoteAsset, setQuoteAsset] = useState(quoteCurrencies[0]);
@@ -20,6 +22,7 @@ export const SymbolSelect = memo(({
     const fullSymbol = `BINANCE:${baseAsset}${quoteAsset}`;
     dispatch(addSymbol(fullSymbol));
     subscribeToSymbolUpdates(fullSymbol);
+    onSelect();
   }, [baseAsset, quoteAsset]);
 
   return <div>
