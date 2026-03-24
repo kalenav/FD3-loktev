@@ -1,6 +1,6 @@
 import { Chart, Credits, Legend, Series } from "@highcharts/react";
 import "highcharts/esm/modules/no-data-to-display.src.js";
-import { useMemo } from "react";
+import { useEffect, useRef } from "react";
 
 export function PriceChart({
   data,
@@ -17,22 +17,20 @@ export function PriceChart({
   xAxisLabel?: string,
   yAxisLabel?: string,
 }) {
-  const zones = useMemo(() => {
+  const zones = useRef<Array<{ value: number; color: string, direction: number }>>([]);
+  useEffect(() => {
     if (data.length < 2) {
-      return [];
+      return;
     }
-    const breakpoints: Array<{ direction: number, value: number }> = [];
-    let prevDirection: number;
-    data.slice(1).forEach((point, index) => {
-      const direction = Math.sign(point.price - data[index].price) || prevDirection || 1;
-      (breakpoints.at(-1)?.direction === direction) && breakpoints.pop();
-      prevDirection = direction;
-      breakpoints.push({ direction, value: point.timestamp });
+    (data[0].timestamp > zones.current[0]?.value) && zones.current.shift();
+    const lastZoneDirection = zones.current.at(-1)?.direction;
+    const currDirection = Math.sign(data.at(-1)!.price - data.at(-2)!.price) || lastZoneDirection || 1;
+    (currDirection === lastZoneDirection) && zones.current.pop();
+    zones.current.push({
+      value: data.at(-1)!.timestamp,
+      color: currDirection === 1 ? "green" : "red",
+      direction: currDirection
     });
-    return breakpoints.map(breakpoint => ({
-      ...breakpoint,
-      color: breakpoint.direction === 1 ? "green" : "red",
-    }));
   }, [data]);
 
   return (
@@ -101,7 +99,7 @@ export function PriceChart({
           lineWidth: 3,
           showInLegend: false,
           zoneAxis: "x",
-          zones: zones,
+          zones: zones.current,
           marker: {
             enabled: false,
             states: {
