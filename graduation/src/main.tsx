@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router'
@@ -7,7 +8,7 @@ import './index.scss'
 import { store } from './redux/store.ts'
 
 createRoot(document.getElementById('root')!).render(
-  // <StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <FinnhubWebSocketProvider>
         <BrowserRouter>
@@ -15,5 +16,5 @@ createRoot(document.getElementById('root')!).render(
         </BrowserRouter>
       </FinnhubWebSocketProvider>
     </Provider>
-  // </StrictMode>,
+  </StrictMode>,
 )
