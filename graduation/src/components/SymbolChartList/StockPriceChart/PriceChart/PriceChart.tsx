@@ -1,6 +1,8 @@
 import { Chart, Credits, Legend, Series } from "@highcharts/react";
 import "highcharts/esm/modules/no-data-to-display.src.js";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
+
+const ANIMATION_DURATION = 300;
 
 export function PriceChart({
   data,
@@ -42,13 +44,26 @@ export function PriceChart({
     }));
   }, [data]);
 
+  const chartRef = useRef<{ chart: Highcharts.Chart } | null>(null);
+  useEffect(() => {
+    const chart = chartRef.current?.chart;
+    if (!chart) return;
+    const animation = { duration: ANIMATION_DURATION };
+    chart.xAxis[0]?.setExtremes(fromTimestamp, toTimestamp, false, animation);
+    chart.redraw(animation);
+  }, [fromTimestamp, toTimestamp]);
+
   return (
     <Chart
+      ref={chartRef}
       options={{
         time: {
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         chart: {
+          animation: {
+            duration: ANIMATION_DURATION,
+          },
           backgroundColor: "transparent",
           borderWidth: 0,
           plotBorderWidth: 0,
@@ -68,8 +83,6 @@ export function PriceChart({
         },
         xAxis: {
           type: "datetime" as const,
-          min: fromTimestamp,
-          max: toTimestamp,
           lineColor: "#272b36",
           tickColor: "#272b36",
           labels: {
@@ -116,7 +129,7 @@ export function PriceChart({
           lineWidth: 2,
           showInLegend: false,
           zoneAxis: "x",
-          zones: zones,
+          zones,
           marker: {
             enabled: false,
             states: {
