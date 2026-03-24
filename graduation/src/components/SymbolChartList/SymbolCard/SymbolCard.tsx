@@ -33,7 +33,7 @@ export const SymbolCard = memo(({
           <span className="symbol-name">{name}</span>
           <button
             className="btn-delete"
-            onClick={(e) => onDelete()}
+            onClick={() => onDelete()}
           >×</button>
         </div>
         <div className="card-details">
